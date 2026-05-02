@@ -1,5 +1,8 @@
 # Random Page Redirect for WordPress
 
+[![CI](https://github.com/thisismyurl/random-page-redirect-for-wordpress/actions/workflows/ci.yml/badge.svg)](https://github.com/thisismyurl/random-page-redirect-for-wordpress/actions/workflows/ci.yml) [![WordPress Tested](https://img.shields.io/badge/WordPress-4.5%2B-blue)](https://wordpress.org/) [![License](https://img.shields.io/badge/License-GPL--2.0-blue)](LICENSE)
+
+
 Adds a `/random` URL to WordPress that redirects to a random published post. Drop-in discovery surface — useful on archive-heavy sites where readers want a "surprise me" button.
 
 ## The short story
