@@ -98,6 +98,7 @@ function thisismyurl_random_redirect_handle() {
 	}
 
 	nocache_headers();
+	// nocache_headers() does not emit `no-store`; required to keep CDNs from pinning the redirect.
 	header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
 
 	wp_safe_redirect( $permalink, 302 );

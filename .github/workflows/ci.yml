@@ -11,6 +11,7 @@ jobs:
     name: PHP Syntax (${{ matrix.php }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         php: ["7.4", "8.0", "8.1", "8.2", "8.3"]
     steps:
@@ -19,7 +20,16 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
       - name: PHP syntax check
-        run: find . -name "*.php" -not -path "./.git/*" -exec php -l {} \; | grep -v "^No syntax errors" || true
+        run: |
+          set -euo pipefail
+          status=0
+          while IFS= read -r -d '' file; do
+            if ! php -l "$file" > /dev/null; then
+              echo "::error file=$file::PHP syntax error"
+              status=1
+            fi
+          done < <(find . -name "*.php" -not -path "./.git/*" -not -path "./vendor/*" -print0)
+          exit $status
 
   phpcs:
     name: PHPCS (WordPress Coding Standards)
@@ -29,10 +39,9 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
-          tools: phpcs, wp-coding-standards/wpcs
-      - name: Configure PHPCS
-        run: phpcs --config-set installed_paths $(composer config home)/vendor/wp-coding-standards/wpcs
-        continue-on-error: true
+          coverage: none
+          tools: composer:v2
+      - name: Install composer deps
+        run: composer install --no-interaction --no-progress --prefer-dist
       - name: Run PHPCS
-        run: phpcs --standard=WordPress --extensions=php --ignore=assets,vendor . || true
-
+        run: composer run lint:phpcs

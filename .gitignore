@@ -1,0 +1,30 @@
+## OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+## PHP / Composer
+/vendor/
+composer.lock
+
+## Node (for any future build step)
+/node_modules/
+
+## Test / coverage
+/.phpunit.cache/
+/.phpunit.result.cache
+/coverage/
+/build/
+/dist/
+
+## Local env
+.env
+.env.*
+!.env.example
+
+## Distribution artifacts
+/*.zip
