@@ -109,3 +109,8 @@ GPL-2.0-or-later. Original contributors `nickadamstv` and `revaultmedia` retain 
 ---
 
 **More about This Is My URL:** Christopher Ross is a WordPress developer on the open web since 1996 and on WordPress since 2007. Learn more at [thisismyurl.com](https://thisismyurl.com/).
+
+
+---
+*This project follows the [10 Core Pillars](PILLARS.md). Support quality work [here](https://github.com/sponsors/thisismyurl).*
+
