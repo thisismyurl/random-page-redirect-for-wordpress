@@ -1,11 +1,11 @@
 === Random Page Redirect for WordPress ===
 Contributors: thisismyurl, nickadamstv, revaultmedia
-Donate link: https://thisismyurl.com/
+Donate link: https://github.com/sponsors/thisismyurl
 Tags: random, redirect, discovery
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.6123
+Stable tag: 1.6143
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,10 @@ The destination is intentionally different on every hit. A 301 would let browser
 Yes. The plugin sends `Cache-Control: no-store, no-cache, must-revalidate, max-age=0` plus `nocache_headers()` so well-behaved edges treat the redirect as uncacheable.
 
 == Changelog ==
+
+= 1.6143 =
+* First full release (class 1). The 0.6xxx line was pre-release on the `x.Yddd` scheme.
+* Standardized the donation link to GitHub Sponsors.
 
 = 0.6123 =
 * Rewrite of the plugin under modernised WordPress standards.

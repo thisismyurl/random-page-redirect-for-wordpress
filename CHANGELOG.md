@@ -3,6 +3,12 @@
 All notable changes to **Random Page Redirect for WordPress** are documented here.
 This project follows [Semantic Versioning](https://semver.org/) where practical, plus a Julian-day pre-release scheme (`x.Yddd`) for in-flight builds: `x` = release class (`0` = pre-release, `1` = full), `Y` = last digit of year, `ddd` = Julian day.
 
+## [1.6143] — 2026-05-23
+
+### Changed
+- Promoted to a full release (class 1). The `0.6xxx` line was pre-release on the `x.Yddd` scheme.
+- Standardized the donation link to GitHub Sponsors (`https://github.com/sponsors/thisismyurl`).
+
 ## [0.6123] — 2026-05-03
 
 ### Changed
