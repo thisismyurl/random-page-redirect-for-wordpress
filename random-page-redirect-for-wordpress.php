@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Random Page Redirect for WordPress
+ * Plugin Name:       This Is My URL - Random Page Redirect for WordPress
  * Plugin URI:        https://thisismyurl.com/plugins/random-page-redirect-for-wordpress/
  * Description:       Adds a /random URL that 302s to a random published post. Filterable post types, no-store cache headers, no settings screen.
  * Version:           1.6143
@@ -126,3 +126,15 @@ function thisismyurl_random_redirect_deactivate() {
 	flush_rewrite_rules();
 }
 register_deactivation_hook( __FILE__, 'thisismyurl_random_redirect_deactivate' );
+
+/**
+ * Append a Sponsor link to the plugin row actions.
+ *
+ * @param string[] $links Existing action links.
+ * @return string[]
+ */
+function thisismyurl_random_redirect_action_links( $links ) {
+	$links[] = '<a href="' . esc_url( 'https://github.com/sponsors/thisismyurl' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Sponsor', 'random-page-redirect-for-wordpress' ) . '</a>';
+	return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'thisismyurl_random_redirect_action_links' );
