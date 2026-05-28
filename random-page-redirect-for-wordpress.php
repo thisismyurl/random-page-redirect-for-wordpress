@@ -19,6 +19,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+require_once __DIR__ . '/abilities.php';
+
 /**
  * Register the /random rewrite rule and its query var.
  *
@@ -44,6 +46,82 @@ function thisismyurl_random_redirect_query_vars( $vars ) {
 add_filter( 'query_vars', 'thisismyurl_random_redirect_query_vars' );
 
 /**
+ * Resolve the post types eligible for the random pick.
+ *
+ * Applies the `thisismyurl_random_redirect_post_types` filter, sanitizes the
+ * result, and falls back to `[ 'post' ]` when the filter yields nothing usable.
+ *
+ * @return string[] List of eligible post-type slugs (never empty).
+ */
+function thisismyurl_random_redirect_post_types() {
+	/**
+	 * Filters the post types eligible for the /random redirect.
+	 *
+	 * @param string[] $post_types Defaults to [ 'post' ].
+	 */
+	$post_types = apply_filters( 'thisismyurl_random_redirect_post_types', array( 'post' ) );
+	$post_types = array_values( array_filter( array_map( 'sanitize_key', (array) $post_types ) ) );
+
+	if ( empty( $post_types ) ) {
+		$post_types = array( 'post' );
+	}
+
+	return $post_types;
+}
+
+/**
+ * Pick one or more random published posts and return their permalinks.
+ *
+ * The shared selection path for both the /random redirect handler and the
+ * Abilities API endpoint. Queries only published, non-password-protected posts
+ * of the eligible types, ordered randomly, and resolves each to a permalink.
+ *
+ * @param int           $count      How many random URLs to return. Clamped to 1+. Default 1.
+ * @param string[]|null $post_types Eligible post-type slugs. Null resolves via the filter.
+ * @return array<int, array{id:int, url:string}> Random {id, url} pairs; empty when nothing matches.
+ */
+function thisismyurl_random_redirect_get_random_urls( $count = 1, $post_types = null ) {
+	$count      = max( 1, (int) $count );
+	$post_types = null === $post_types ? thisismyurl_random_redirect_post_types() : $post_types;
+
+	$ids = get_posts(
+		array(
+			'post_type'              => $post_types,
+			'post_status'            => 'publish',
+			'has_password'           => false,
+			'ignore_sticky_posts'    => true,
+			'posts_per_page'         => $count,
+			'orderby'                => 'rand',
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'suppress_filters'       => false,
+		)
+	);
+
+	if ( empty( $ids ) ) {
+		return array();
+	}
+
+	$items = array();
+	foreach ( $ids as $id ) {
+		$permalink = get_permalink( (int) $id );
+
+		if ( false === $permalink ) {
+			continue;
+		}
+
+		$items[] = array(
+			'id'  => (int) $id,
+			'url' => $permalink,
+		);
+	}
+
+	return $items;
+}
+
+/**
  * On a /random hit, look up a random published post and 302 to it.
  *
  * Sends Cache-Control: no-store so edges/CDNs don't pin the redirect to a single
@@ -59,43 +137,13 @@ function thisismyurl_random_redirect_handle() {
 		return;
 	}
 
-	/**
-	 * Filters the post types eligible for the /random redirect.
-	 *
-	 * @param string[] $post_types Defaults to [ 'post' ].
-	 */
-	$post_types = apply_filters( 'thisismyurl_random_redirect_post_types', array( 'post' ) );
-	$post_types = array_values( array_filter( array_map( 'sanitize_key', (array) $post_types ) ) );
+	$items = thisismyurl_random_redirect_get_random_urls( 1 );
 
-	if ( empty( $post_types ) ) {
-		$post_types = array( 'post' );
-	}
-
-	$ids = get_posts(
-		array(
-			'post_type'              => $post_types,
-			'post_status'            => 'publish',
-			'has_password'           => false,
-			'ignore_sticky_posts'    => true,
-			'posts_per_page'         => 1,
-			'orderby'                => 'rand',
-			'fields'                 => 'ids',
-			'no_found_rows'          => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-			'suppress_filters'       => false,
-		)
-	);
-
-	if ( empty( $ids ) ) {
+	if ( empty( $items ) ) {
 		return;
 	}
 
-	$permalink = get_permalink( (int) $ids[0] );
-
-	if ( false === $permalink ) {
-		return;
-	}
+	$permalink = $items[0]['url'];
 
 	nocache_headers();
 	// nocache_headers() does not emit `no-store`; required to keep CDNs from pinning the redirect.

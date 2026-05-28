@@ -67,6 +67,10 @@ Yes. The plugin sends `Cache-Control: no-store, no-cache, must-revalidate, max-a
 
 == Changelog ==
 
+= 1.6148 =
+* Added WordPress 7.0 Abilities API support: the `random-page-redirect/get-random-url` ability returns one or more random published posts as {id, url} pairs for REST/AI discovery (read-only; never performs the redirect).
+* Extracted the random-post selection into a shared `thisismyurl_random_redirect_get_random_urls()` function used by both the /random endpoint and the new ability.
+
 = 1.6147 =
 * Unified plugin versioning to the x.Yddd calendar-version scheme.
 * Confirmed compatibility with WordPress 7.0.
