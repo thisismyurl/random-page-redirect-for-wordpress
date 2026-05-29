@@ -51,7 +51,14 @@ add_filter( 'query_vars', 'thisismyurl_random_redirect_query_vars' );
  * Applies the `thisismyurl_random_redirect_post_types` filter, sanitizes the
  * result, and falls back to `[ 'post' ]` when the filter yields nothing usable.
  *
- * @return string[] List of eligible post-type slugs (never empty).
+ * A public-visibility floor is enforced *after* the filter so a third-party
+ * filter callback can never opt a private or non-publicly-queryable type into
+ * the random pool — the /random redirect is an anonymous, publicly reachable
+ * URL. This mirrors the Abilities API execute_callback, which validates the
+ * requested type against `get_post_types( [ 'public' => true ] )`; both paths
+ * now share one public-type guard.
+ *
+ * @return string[] List of eligible public post-type slugs (never empty).
  */
 function thisismyurl_random_redirect_post_types() {
 	/**
@@ -61,6 +68,9 @@ function thisismyurl_random_redirect_post_types() {
 	 */
 	$post_types = apply_filters( 'thisismyurl_random_redirect_post_types', array( 'post' ) );
 	$post_types = array_values( array_filter( array_map( 'sanitize_key', (array) $post_types ) ) );
+
+	$public     = get_post_types( array( 'public' => true ), 'names' );
+	$post_types = array_values( array_intersect( $post_types, $public ) );
 
 	if ( empty( $post_types ) ) {
 		$post_types = array( 'post' );

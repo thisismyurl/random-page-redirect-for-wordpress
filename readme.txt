@@ -5,7 +5,7 @@ Tags: random, redirect, discovery
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.6147
+Stable tag: 1.6149
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,9 @@ The destination is intentionally different on every hit. A 301 would let browser
 Yes. The plugin sends `Cache-Control: no-store, no-cache, must-revalidate, max-age=0` plus `nocache_headers()` so well-behaved edges treat the redirect as uncacheable.
 
 == Changelog ==
+
+= 1.6149 =
+* Security (visibility parity): the /random redirect now enforces the same public-post-type floor as the Abilities API endpoint. A `thisismyurl_random_redirect_post_types` filter callback can no longer opt a private or non-public type into the anonymous redirect pool.
 
 = 1.6148 =
 * Added WordPress 7.0 Abilities API support: the `random-page-redirect/get-random-url` ability returns one or more random published posts as {id, url} pairs for REST/AI discovery (read-only; never performs the redirect).
