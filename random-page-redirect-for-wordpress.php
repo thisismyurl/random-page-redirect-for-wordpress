@@ -3,7 +3,7 @@
  * Plugin Name:       This Is My URL - Random Page Redirect for WordPress
  * Plugin URI:        https://thisismyurl.com/plugins/random-page-redirect-for-wordpress/
  * Description:       Adds a /random URL that 302s to a random published post. Filterable post types, no-store cache headers, no settings screen.
- * Version:           1.6147
+ * Version:           1.6148.2110
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            Christopher Ross
