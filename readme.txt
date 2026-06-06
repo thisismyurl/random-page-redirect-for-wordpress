@@ -1,4 +1,4 @@
-=== This Is My URL - Random Page Redirect for WordPress ===
+=== - Random Page Redirect for WordPress by Christopher Ross ===
 Contributors: thisismyurl, nickadamstv, revaultmedia
 Donate link: https://github.com/sponsors/thisismyurl
 Tags: random, redirect, discovery
